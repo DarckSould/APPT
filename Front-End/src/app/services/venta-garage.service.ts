@@ -10,7 +10,7 @@ export interface DeleteResponse {
 
 @Injectable({ providedIn: 'root' })
 export class VentaGarageService {
-  private apiUrl = 'http://localhost:4000/api/venta-garage';
+  private apiUrl = 'https://appt-z1np.onrender.com/api/venta-garage';
 
   constructor(private http: HttpClient) {}
 

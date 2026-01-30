@@ -7,7 +7,7 @@ import { Reconocimiento } from '../models/reconocimiento.model';
   providedIn: 'root',
 })
 export class ReconocimientosService {
-  private apiUrl = 'http://localhost:4000/api/reconocimientos';
+  private apiUrl = 'https://appt-z1np.onrender.com/api/reconocimientos';
 
   constructor(private http: HttpClient) {}
 

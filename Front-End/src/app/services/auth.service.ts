@@ -11,7 +11,7 @@ interface LoginResponse {
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:4000/api/auth';
+  private apiUrl = 'https://appt-z1np.onrender.com/api/auth';
 
   private currentUserSubject = new BehaviorSubject<any | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();

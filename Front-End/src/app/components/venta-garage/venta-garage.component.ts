@@ -38,7 +38,7 @@ export class VentaGarageComponent implements OnInit {
   }
 
   getFotoUrl(foto?: string): string {
-    return foto ? `http://localhost:4000${foto}` : '';
+    return foto ? `https://appt-z1np.onrender.com${foto}` : '';
   }
 
   onFileSelected(event: any) {

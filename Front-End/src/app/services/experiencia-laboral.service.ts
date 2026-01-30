@@ -7,7 +7,7 @@ import { Experiencia } from '../models/experiencia-laboral.model';
   providedIn: 'root',
 })
 export class ExperienciaService {
-  private apiUrl = 'http://localhost:4000/api/experiencia-laboral';
+  private apiUrl = 'https://appt-z1np.onrender.com/api/experiencia-laboral';
 
   constructor(private http: HttpClient) {}
 

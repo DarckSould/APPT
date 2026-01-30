@@ -7,7 +7,7 @@ import { Curso } from '../models/cursos-realizados.model';
   providedIn: 'root',
 })
 export class CursosService {
-  private apiUrl = 'http://localhost:4000/api/cursos-realizados';
+  private apiUrl = 'https://appt-z1np.onrender.com/api/cursos-realizados';
 
   constructor(private http: HttpClient) {}
 

@@ -7,7 +7,7 @@ import { DatosPersonales, PerfilResponse, MessageResponse } from '../models/dato
   providedIn: 'root',
 })
 export class DatosPersonalesService {
-  private apiUrl = 'http://localhost:4000/api/datos-personales';
+  private apiUrl = 'https://appt-z1np.onrender.com/api/datos-personales';
 
   constructor(private http: HttpClient) {}
 
@@ -41,7 +41,7 @@ export class DatosPersonalesService {
      OBTENER URL COMPLETA DE FOTO
   ========================= */
   getFotoUrl(foto?: string): string {
-    return foto ? `http://localhost:4000${foto}` : '';
+    return foto ? `https://appt-z1np.onrender.com${foto}` : '';
   }
 
   /* =========================

@@ -52,7 +52,7 @@ export class DatosPersonalesComponent implements OnInit {
 
   // Construir URL completa de la foto
  getFotoUrl(foto?: string): string {
-  return foto ? `http://localhost:4000${foto}` : '';
+  return foto ? `https://appt-z1np.onrender.com${foto}` : '';
 }
 
   // ========================= PERFIL =========================

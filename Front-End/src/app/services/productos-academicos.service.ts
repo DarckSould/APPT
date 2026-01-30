@@ -10,7 +10,7 @@ export interface DeleteResponse {
 
 @Injectable({ providedIn: 'root' })
 export class ProductosAcademicosService {
-  private apiUrl = 'http://localhost:4000/api/productos-academicos';
+  private apiUrl = 'https://appt-z1np.onrender.com/api/productos-academicos';
 
   constructor(private http: HttpClient) {}
 
