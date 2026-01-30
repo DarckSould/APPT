@@ -1,0 +1,259 @@
+<div
+  class="container mx-auto px-3 sm:px-6 lg:px-8 py-4"
+  *ngIf="!loading; else cargando"
+>
+  <!-- ========================= FOTO DE PERFIL ========================= -->
+  <div
+    class="bg-white shadow-lg rounded-2xl p-4 sm:p-6 mb-6 flex flex-col sm:flex-row gap-6 items-center"
+  >
+    <!-- Imagen de perfil -->
+    <div class="flex-shrink-0">
+      <!-- Preview de foto seleccionada -->
+      <img
+        *ngIf="fotoPreview; else mostrarFotoActual"
+        [src]="fotoPreview"
+        alt="Foto perfil"
+        class="w-32 h-32 rounded-full object-cover border"
+      />
+
+      <!-- Foto actual del backend -->
+      <ng-template #mostrarFotoActual>
+        <img
+          *ngIf="fotoUrl; else sinFoto"
+          [src]="fotoUrl"
+          alt="Foto perfil"
+          class="w-32 h-32 rounded-full object-cover border"
+        />
+      </ng-template>
+
+      <!-- Placeholder si no hay foto -->
+      <ng-template #sinFoto>
+        <div
+          class="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center text-gray-500"
+        >
+          Sin foto
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- Controles de subida -->
+    <div class="flex-1 space-y-3 w-full">
+      <h2 class="text-xl sm:text-2xl font-bold border-b pb-2">
+        Datos Personales
+      </h2>
+
+      <input
+        type="file"
+        accept="image/*"
+        (change)="onFotoSeleccionada($event)"
+        class="block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+      />
+
+      <button
+        type="button"
+        (click)="subirFoto()"
+        [disabled]="!fotoSeleccionada || loading"
+        class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+      >
+        Subir foto
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================= FORMULARIO DATOS PERSONALES ========================= -->
+  <form
+    [formGroup]="form"
+    (ngSubmit)="guardar()"
+    class="bg-white shadow-lg rounded-2xl p-4 sm:p-6 space-y-6"
+  >
+    <h2 class="text-xl sm:text-2xl font-bold border-b pb-2">
+      Datos Personales
+    </h2>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <!-- Nombres -->
+      <div>
+        <label class="block font-medium mb-1">Nombres *</label>
+        <input
+          formControlName="nombres"
+          type="text"
+          class="w-full rounded-lg border px-3 py-2.5 focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      <!-- Apellidos -->
+      <div>
+        <label class="block font-medium mb-1">Apellidos *</label>
+        <input
+          formControlName="apellidos"
+          type="text"
+          class="w-full rounded-lg border px-3 py-2.5 focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      <!-- Fecha nacimiento -->
+      <div>
+        <label class="block font-medium mb-1">Fecha de nacimiento *</label>
+        <input
+          formControlName="fechanacimiento"
+          type="date"
+          class="w-full rounded-lg border px-3 py-2.5 focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      <!-- Descripción -->
+      <div class="sm:col-span-2 lg:col-span-3">
+        <label class="block font-medium mb-1">Descripción del perfil</label>
+        <textarea
+          formControlName="descripcionperfil"
+          rows="3"
+          class="w-full rounded-lg border px-3 py-2.5 focus:ring-2 focus:ring-blue-500"
+        ></textarea>
+      </div>
+
+      <!-- Otros campos -->
+      <div>
+        <label class="block font-medium mb-1">Nacionalidad</label>
+        <input
+          formControlName="nacionalidad"
+          class="w-full rounded-lg border px-3 py-2.5"
+        />
+      </div>
+
+      <div>
+        <label class="block font-medium mb-1">Lugar de nacimiento</label>
+        <input
+          formControlName="lugarnacimiento"
+          class="w-full rounded-lg border px-3 py-2.5"
+        />
+      </div>
+
+      <div>
+        <label class="block font-medium mb-1">Número de cédula *</label>
+        <input
+          formControlName="numerocedula"
+          class="w-full rounded-lg border px-3 py-2.5"
+        />
+      </div>
+
+      <div>
+        <label class="block font-medium mb-1">Sexo *</label>
+        <select
+          formControlName="sexo"
+          class="w-full rounded-lg border px-3 py-2.5"
+        >
+          <option value="">Seleccione</option>
+          <option value="H">Hombre</option>
+          <option value="M">Mujer</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block font-medium mb-1">Estado civil</label>
+        <select
+          formControlName="estadocivil"
+          class="w-full rounded-lg border px-3 py-2.5"
+        >
+          <option value="">Seleccione</option>
+          <option>Soltero</option>
+          <option>Casado</option>
+          <option>Divorciado</option>
+          <option>Viudo</option>
+          <option>Unión Libre</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block font-medium mb-1">Licencia de conducir</label>
+        <select
+          formControlName="licenciaconducir"
+          class="w-full rounded-lg border px-3 py-2.5"
+        >
+          <option value="">Seleccione</option>
+          <option value="SI">Sí</option>
+          <option value="NO">No</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block font-medium mb-1">Teléfono convencional</label>
+        <input
+          formControlName="telefonoconvencional"
+          class="w-full rounded-lg border px-3 py-2.5"
+        />
+      </div>
+
+      <div>
+        <label class="block font-medium mb-1">Teléfono fijo</label>
+        <input
+          formControlName="telefonofijo"
+          class="w-full rounded-lg border px-3 py-2.5"
+        />
+      </div>
+
+      <div>
+        <label class="block font-medium mb-1">Dirección trabajo</label>
+        <input
+          formControlName="direcciontrabajo"
+          class="w-full rounded-lg border px-3 py-2.5"
+        />
+      </div>
+
+      <div>
+        <label class="block font-medium mb-1">Dirección domiciliaria</label>
+        <input
+          formControlName="direcciondomiciliaria"
+          class="w-full rounded-lg border px-3 py-2.5"
+        />
+      </div>
+
+      <div class="sm:col-span-2 lg:col-span-3">
+        <label class="block font-medium mb-1">Sitio web</label>
+        <input
+          formControlName="sitioweb"
+          type="url"
+          class="w-full rounded-lg border px-3 py-2.5"
+        />
+      </div>
+    </div>
+
+    <!-- BOTONES -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-4">
+      <button
+        type="submit"
+        [disabled]="loading"
+        class="w-full bg-blue-600 text-white py-2.5 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+      >
+        Guardar
+      </button>
+
+      <button
+        type="button"
+        (click)="eliminarPerfil()"
+        class="w-full bg-red-600 text-white py-2.5 rounded-lg hover:bg-red-700"
+      >
+        Ocultar
+      </button>
+
+      <button
+        type="button"
+        (click)="recuperarPerfil()"
+        class="w-full bg-green-600 text-white py-2.5 rounded-lg hover:bg-green-700"
+      >
+        Recuperar
+      </button>
+
+      <button
+        type="button"
+        (click)="cargarPerfilOculto()"
+        class="w-full bg-gray-600 text-white py-2.5 rounded-lg hover:bg-gray-700"
+      >
+        Ver oculto
+      </button>
+    </div>
+  </form>
+</div>
+
+<ng-template #cargando>
+  <div class="text-center py-10 text-gray-500 text-lg">Cargando perfil...</div>
+</ng-template>

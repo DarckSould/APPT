@@ -1,0 +1,304 @@
+<div
+  class="container mx-auto px-3 sm:px-6 lg:px-8 py-4"
+  *ngIf="!loading; else cargando"
+>
+  <!-- =========================
+       FORMULARIO
+  ========================= -->
+  <form
+    [formGroup]="experienciaForm"
+    (ngSubmit)="submitForm()"
+    class="bg-white shadow-lg rounded-2xl p-4 sm:p-6 space-y-6"
+  >
+    <h2 class="text-xl sm:text-2xl font-bold border-b pb-2">
+      Experiencia Laboral
+    </h2>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div>
+        <label class="block font-medium mb-1">Cargo desempeñado</label>
+        <input
+          type="text"
+          formControlName="cargodesempenado"
+          class="w-full rounded-lg border px-3 py-2.5 focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      <div>
+        <label class="block font-medium mb-1">Nombre de la empresa</label>
+        <input
+          type="text"
+          formControlName="nombrempresa"
+          class="w-full rounded-lg border px-3 py-2.5"
+        />
+      </div>
+
+      <div>
+        <label class="block font-medium mb-1">Lugar de la empresa</label>
+        <input
+          type="text"
+          formControlName="lugarempresa"
+          class="w-full rounded-lg border px-3 py-2.5"
+        />
+      </div>
+
+      <div>
+        <label class="block font-medium mb-1">Email empresa</label>
+        <input
+          type="email"
+          formControlName="emailempresa"
+          class="w-full rounded-lg border px-3 py-2.5"
+        />
+      </div>
+
+      <div>
+        <label class="block font-medium mb-1">Sitio web empresa</label>
+        <input
+          type="url"
+          formControlName="sitiowebempresa"
+          class="w-full rounded-lg border px-3 py-2.5"
+        />
+      </div>
+
+      <div>
+        <label class="block font-medium mb-1">Nombre contacto</label>
+        <input
+          type="text"
+          formControlName="nombrecontactoempresarial"
+          class="w-full rounded-lg border px-3 py-2.5"
+        />
+      </div>
+
+      <div>
+        <label class="block font-medium mb-1">Teléfono contacto</label>
+        <input
+          type="text"
+          formControlName="telefonocontactoempresarial"
+          class="w-full rounded-lg border px-3 py-2.5"
+        />
+      </div>
+
+      <div>
+        <label class="block font-medium mb-1">Fecha inicio</label>
+        <input
+          type="date"
+          formControlName="fechainiciogestion"
+          class="w-full rounded-lg border px-3 py-2.5"
+        />
+      </div>
+
+      <div>
+        <label class="block font-medium mb-1">Fecha fin</label>
+        <input
+          type="date"
+          formControlName="fechafingestion"
+          class="w-full rounded-lg border px-3 py-2.5"
+        />
+      </div>
+
+      <div class="sm:col-span-2 lg:col-span-3">
+        <label class="block font-medium mb-1">Descripción de funciones</label>
+        <textarea
+          formControlName="descripcionfunciones"
+          rows="3"
+          class="w-full rounded-lg border px-3 py-2.5"
+        ></textarea>
+      </div>
+
+      <div>
+        <label class="block font-medium mb-1">Certificado (PDF)</label>
+        <input
+          type="file"
+          (change)="onFileSelected($event)"
+          accept=".pdf"
+          class="w-full rounded-lg border px-3 py-2.5"
+        />
+      </div>
+
+      <div class="flex items-center gap-2 pt-6">
+        <input
+          type="checkbox"
+          formControlName="activarparaqueseveaenfront"
+          id="activarFront"
+          class="accent-blue-600"
+        />
+        <label for="activarFront" class="font-medium"> Mostrar en front </label>
+      </div>
+    </div>
+
+    <!-- BOTONES -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4">
+      <button
+        type="submit"
+        class="w-full bg-blue-600 text-white py-2.5 rounded-lg hover:bg-blue-700"
+      >
+        {{ editingId ? "Actualizar" : "Guardar" }}
+      </button>
+
+      <button
+        type="button"
+        (click)="resetForm()"
+        class="w-full bg-gray-300 py-2.5 rounded-lg hover:bg-gray-400"
+      >
+        Limpiar
+      </button>
+
+      <button
+        type="button"
+        (click)="loadHiddenExperiencias()"
+        class="w-full bg-purple-600 text-white py-2.5 rounded-lg hover:bg-purple-700"
+      >
+        Ver ocultas
+      </button>
+    </div>
+  </form>
+
+  <!-- =========================
+       EXPERIENCIAS VISIBLES
+  ========================= -->
+  <h3 class="text-xl font-semibold mt-8 mb-4">
+    Experiencias laborales cargadas
+  </h3>
+
+  <div *ngIf="experiencias.length === 0" class="text-gray-500">
+    No hay experiencias registradas.
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div
+      *ngFor="let exp of experiencias"
+      class="bg-white rounded-xl shadow-md p-6 flex flex-col justify-between"
+    >
+      <div
+        *ngFor="let exp of experiencias"
+        class="mb-4 p-4 bg-white rounded-lg shadow-sm"
+      >
+        <!-- Cargo -->
+        <h4 class="font-semibold text-lg text-gray-800 mb-1">
+          {{ exp.cargodesempenado || "Cargo no especificado" }}
+        </h4>
+
+        <!-- Empresa y lugar -->
+        <p
+          class="text-sm text-gray-600 mb-2"
+          *ngIf="exp.nombrempresa || exp.lugarempresa"
+        >
+          <span *ngIf="exp.nombrempresa">{{ exp.nombrempresa }}</span>
+          <span *ngIf="exp.nombrempresa && exp.lugarempresa"> - </span>
+          <span *ngIf="exp.lugarempresa">{{ exp.lugarempresa }}</span>
+        </p>
+
+        <!-- Fechas -->
+        <p class="text-sm text-gray-500 mb-2">
+          {{ exp.fechainiciogestion | date: "MMM yyyy" }} -
+          {{
+            exp.fechafingestion
+              ? (exp.fechafingestion | date: "MMM yyyy")
+              : "Actual"
+          }}
+        </p>
+
+        <!-- Descripción de funciones -->
+        <p class="text-sm text-gray-700 mb-2" *ngIf="exp.descripcionfunciones">
+          {{ exp.descripcionfunciones }}
+        </p>
+
+        <!-- Email de la empresa -->
+        <p class="text-sm text-gray-500 mb-2" *ngIf="exp.emailempresa">
+          Email: {{ exp.emailempresa }}
+        </p>
+
+        <!-- Sitio web -->
+        <p class="text-sm text-gray-500 mb-2" *ngIf="exp.sitiowebempresa">
+          Web:
+          <a
+            href="{{ exp.sitiowebempresa }}"
+            target="_blank"
+            class="text-blue-600 hover:underline"
+          >
+            {{ exp.sitiowebempresa }}
+          </a>
+        </p>
+
+        <!-- Contacto empresarial -->
+        <p
+          class="text-sm text-gray-500 mb-2"
+          *ngIf="exp.nombrecontactoempresarial"
+        >
+          Contacto: {{ exp.nombrecontactoempresarial }}
+        </p>
+
+        <p
+          class="text-sm text-gray-500 mb-2"
+          *ngIf="exp.telefonocontactoempresarial"
+        >
+          Teléfono contacto: {{ exp.telefonocontactoempresarial }}
+        </p>
+      </div>
+
+      <div class="flex flex-wrap gap-2 pt-3">
+        <button
+          (click)="editExperiencia(exp)"
+          class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
+        >
+          Editar
+        </button>
+
+        <button
+          (click)="deleteExperiencia(exp._id!)"
+          class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+        >
+          Eliminar
+        </button>
+
+        <button
+          *ngIf="exp.rutacertificado"
+          (click)="downloadCertificado(exp)"
+          class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
+        >
+          Certificado
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================
+       EXPERIENCIAS OCULTAS
+  ========================= -->
+  <div *ngIf="hiddenExperiencias.length > 0" class="mt-10">
+    <h3 class="text-xl font-semibold mb-4">Experiencias ocultas</h3>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div
+        *ngFor="let exp of hiddenExperiencias"
+        class="bg-gray-100 rounded-xl p-4 shadow-sm"
+      >
+        <p class="font-medium">{{ exp.cargodesempenado }}</p>
+        <p class="text-sm text-gray-600">{{ exp.nombrempresa }}</p>
+
+        <div class="flex gap-2 mt-3">
+          <button
+            (click)="recoverExperiencia(exp._id!)"
+            class="bg-blue-600 text-white px-3 py-1 rounded"
+          >
+            Recuperar
+          </button>
+
+          <button
+            *ngIf="exp.rutacertificado"
+            (click)="downloadCertificado(exp)"
+            class="bg-green-600 text-white px-3 py-1 rounded"
+          >
+            📄 Certificado
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #cargando>
+  <div class="text-center py-10 text-gray-500 text-lg">
+    Cargando experiencias...
+  </div>
+</ng-template>

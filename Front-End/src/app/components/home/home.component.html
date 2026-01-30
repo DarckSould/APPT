@@ -1,0 +1,537 @@
+<div class="max-w-6xl mx-auto px-4 sm:px-6 py-6">
+  <!-- MENÚ DESPLEGABLE RESPONSIVO -->
+  <div class="mb-8 relative inline-block text-left w-full max-w-xs sm:max-w-sm">
+    <!-- Botón del menú -->
+    <button
+      (click)="menuAbierto = !menuAbierto"
+      class="inline-flex justify-between items-center w-full bg-white border border-blue-500 rounded-lg px-4 py-2 shadow-sm text-gray-700 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+    >
+      Selecciona secciones
+      <svg
+        class="w-5 h-5 ml-2 transition-transform duration-200 text-blue-600"
+        [class.rotate-180]="menuAbierto"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M19 9l-7 7-7-7"
+        ></path>
+      </svg>
+    </button>
+
+    <!-- Panel desplegable -->
+    <div
+      *ngIf="menuAbierto"
+      class="absolute left-0 mt-2 w-full sm:w-72 bg-white border border-blue-500 rounded-lg shadow-lg z-10 p-4"
+    >
+      <div class="flex flex-col gap-4">
+        <label class="flex items-center space-x-3 cursor-pointer">
+          <input
+            type="checkbox"
+            [(ngModel)]="seccionesParaImprimir.perfil"
+            class="accent-blue-600 w-4 h-4"
+          />
+          <span class="text-gray-700 break-words">Perfil</span>
+        </label>
+
+        <label class="flex items-center space-x-3 cursor-pointer">
+          <input
+            type="checkbox"
+            [(ngModel)]="seccionesParaImprimir.experiencias"
+            class="accent-blue-600 w-4 h-4"
+          />
+          <span class="text-gray-700 break-words">Experiencias</span>
+        </label>
+
+        <label class="flex items-center space-x-3 cursor-pointer">
+          <input
+            type="checkbox"
+            [(ngModel)]="seccionesParaImprimir.reconocimientos"
+            class="accent-blue-600 w-4 h-4"
+          />
+          <span class="text-gray-700 break-words">Reconocimientos</span>
+        </label>
+
+        <label class="flex items-center space-x-3 cursor-pointer">
+          <input
+            type="checkbox"
+            [(ngModel)]="seccionesParaImprimir.cursos"
+            class="accent-blue-600 w-4 h-4"
+          />
+          <span class="text-gray-700 break-words">Cursos</span>
+        </label>
+
+        <label class="flex items-center space-x-3 cursor-pointer">
+          <input
+            type="checkbox"
+            [(ngModel)]="seccionesParaImprimir.productosAcademicos"
+            class="accent-blue-600 w-4 h-4"
+          />
+          <span class="text-gray-700 break-words">Productos Académicos</span>
+        </label>
+
+        <label class="flex items-center space-x-3 cursor-pointer">
+          <input
+            type="checkbox"
+            [(ngModel)]="seccionesParaImprimir.productosLaborales"
+            class="accent-blue-600 w-4 h-4"
+          />
+          <span class="text-gray-700 break-words">Productos Laborales</span>
+        </label>
+
+        <label class="flex items-center space-x-3 cursor-pointer">
+          <input
+            type="checkbox"
+            [(ngModel)]="seccionesParaImprimir.ventasGarage"
+            class="accent-blue-600 w-4 h-4"
+          />
+          <span class="text-gray-700 break-words">Ventas Garage</span>
+        </label>
+      </div>
+
+      <button
+        (click)="imprimir(); menuAbierto = false"
+        class="mt-6 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+      >
+        🖨️ Imprimir
+      </button>
+    </div>
+  </div>
+
+  <!-- PERFIL -->
+  <div id="perfil" class="section mb-8" *ngIf="perfil">
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+      <!-- FOTO Y NOMBRE -->
+      <div
+        class="bg-gray-50 px-8 py-8 text-center flex flex-col items-center sm:flex-row sm:justify-center sm:gap-8"
+      >
+        <!-- Foto -->
+        <div class="flex-shrink-0 mb-4 sm:mb-0">
+          <img
+            *ngIf="fotoPreview; else sinFoto"
+            [src]="fotoPreview"
+            alt="Foto de perfil"
+            class="w-32 h-32 rounded-full object-cover border-2 border-gray-300"
+          />
+          <ng-template #sinFoto>
+            <div
+              class="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center text-gray-500"
+            >
+              Sin foto
+            </div>
+          </ng-template>
+        </div>
+
+        <!-- Nombre y descripción -->
+        <div class="text-center sm:text-left">
+          <h1 class="text-3xl sm:text-4xl font-bold text-gray-800">
+            {{ perfil.nombres }} {{ perfil.apellidos }}
+          </h1>
+          <p class="text-gray-600 mt-2 sm:mt-4 sm:text-lg">
+            {{ perfil.descripcionperfil }}
+          </p>
+        </div>
+      </div>
+
+      <!-- DATOS -->
+      <div
+        class="px-8 py-6 grid grid-cols-1 sm:grid-cols-2 gap-8 text-gray-700"
+      >
+        <!-- Datos Básicos -->
+        <div class="space-y-4">
+          <h2 class="text-xl font-semibold border-b pb-2 text-gray-800">
+            Datos Básicos
+          </h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+            <div>
+              <span class="font-semibold">Fecha de nacimiento:</span>
+              {{ perfil.fechanacimiento | date: "longDate" }}
+            </div>
+            <div>
+              <span class="font-semibold">Sexo:</span> {{ perfil.sexo }}
+            </div>
+            <div>
+              <span class="font-semibold">Estado civil:</span>
+              {{ perfil.estadocivil }}
+            </div>
+            <div>
+              <span class="font-semibold">Licencia de conducir:</span>
+              {{ perfil.licenciaconducir }}
+            </div>
+            <div class="sm:col-span-2">
+              <span class="font-semibold">Nacionalidad:</span>
+              {{ perfil.nacionalidad }}
+            </div>
+            <div class="sm:col-span-2">
+              <span class="font-semibold">Lugar de nacimiento:</span>
+              {{ perfil.lugarnacimiento }}
+            </div>
+            <div class="sm:col-span-2">
+              <span class="font-semibold">Cédula:</span>
+              {{ perfil.numerocedula }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Contacto -->
+        <div class="space-y-4">
+          <h2 class="text-xl font-semibold border-b pb-2 text-gray-800">
+            Contacto
+          </h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+            <div>
+              <span class="font-semibold">Teléfono convencional:</span>
+              {{ perfil.telefonoconvencional }}
+            </div>
+            <div>
+              <span class="font-semibold">Teléfono fijo:</span>
+              {{ perfil.telefonofijo }}
+            </div>
+            <div class="sm:col-span-2">
+              <span class="font-semibold">Dirección domiciliaria:</span>
+              {{ perfil.direcciondomiciliaria }}
+            </div>
+            <div class="sm:col-span-2">
+              <span class="font-semibold">Dirección trabajo:</span>
+              {{ perfil.direcciontrabajo }}
+            </div>
+            <div class="sm:col-span-2">
+              <span class="font-semibold">Sitio web:</span>
+              <a
+                href="{{ perfil.sitioweb }}"
+                target="_blank"
+                class="text-blue-600 hover:underline"
+              >
+                {{ perfil.sitioweb }}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXPERIENCIAS -->
+  <div id="experiencias" class="section mb-8" *ngIf="experiencias.length > 0">
+    <h2 class="text-2xl font-semibold mb-6 text-gray-800">
+      Experiencias Laborales
+    </h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div
+        *ngFor="let exp of experiencias"
+        class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition"
+      >
+        <!-- Cargo -->
+        <h3 class="font-semibold text-gray-800 text-lg mb-2">
+          {{ exp.cargodesempenado || "Cargo no especificado" }}
+        </h3>
+
+        <!-- Empresa y lugar -->
+        <p
+          class="text-gray-600 text-sm mb-2"
+          *ngIf="exp.nombrempresa || exp.lugarempresa"
+        >
+          <span *ngIf="exp.nombrempresa">{{ exp.nombrempresa }}</span>
+          <span *ngIf="exp.nombrempresa && exp.lugarempresa"> - </span>
+          <span *ngIf="exp.lugarempresa">{{ exp.lugarempresa }}</span>
+        </p>
+
+        <!-- Fechas -->
+        <p class="text-gray-500 text-sm mb-2">
+          {{ exp.fechainiciogestion | date: "MMM yyyy" }} -
+          {{
+            exp.fechafingestion
+              ? (exp.fechafingestion | date: "MMM yyyy")
+              : "Actual"
+          }}
+        </p>
+
+        <!-- Descripción de funciones -->
+        <p class="text-gray-700 text-sm mb-2" *ngIf="exp.descripcionfunciones">
+          {{ exp.descripcionfunciones }}
+        </p>
+
+        <!-- Email de la empresa -->
+        <p class="text-gray-500 text-sm mb-2" *ngIf="exp.emailempresa">
+          Email: {{ exp.emailempresa }}
+        </p>
+
+        <!-- Sitio web -->
+        <p class="text-gray-500 text-sm mb-2" *ngIf="exp.sitiowebempresa">
+          Web:
+          <a
+            href="{{ exp.sitiowebempresa }}"
+            target="_blank"
+            class="text-blue-600 hover:underline"
+          >
+            {{ exp.sitiowebempresa }}
+          </a>
+        </p>
+
+        <!-- Contacto empresarial -->
+        <p
+          class="text-gray-500 text-sm mb-2"
+          *ngIf="exp.nombrecontactoempresarial"
+        >
+          Contacto: {{ exp.nombrecontactoempresarial }}
+        </p>
+
+        <p
+          class="text-gray-500 text-sm mb-2"
+          *ngIf="exp.telefonocontactoempresarial"
+        >
+          Teléfono contacto: {{ exp.telefonocontactoempresarial }}
+        </p>
+
+        <!-- Botón de certificado -->
+        <button
+          *ngIf="exp.rutacertificado"
+          (click)="downloadCertificadoExperiencia(exp)"
+          class="bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700 transition"
+        >
+          📄 Descargar certificado
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RECONOCIMIENTOS -->
+  <div
+    id="reconocimientos"
+    class="section mb-8"
+    *ngIf="reconocimientos.length > 0"
+  >
+    <h2 class="text-2xl font-semibold mb-6 text-gray-800">Reconocimientos</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div
+        *ngFor="let rec of reconocimientos"
+        class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition"
+      >
+        <!-- Tipo de reconocimiento -->
+        <h3 class="font-semibold text-gray-800 text-lg mb-2">
+          {{ rec.tiporeconocimiento || "Tipo no especificado" }}
+        </h3>
+
+        <!-- Fecha -->
+        <p class="text-gray-500 text-sm mb-2">
+          {{ rec.fechareconocimiento | date: "MMM yyyy" }}
+        </p>
+
+        <!-- Descripción -->
+        <p
+          class="text-gray-700 text-sm mb-2"
+          *ngIf="rec.descripcionreconocimiento"
+        >
+          {{ rec.descripcionreconocimiento }}
+        </p>
+
+        <!-- Entidad patrocinadora -->
+        <p *ngIf="rec.entidadpatrocinadora" class="text-gray-600 text-sm mb-1">
+          {{ rec.entidadpatrocinadora }}
+        </p>
+
+        <!-- Nombre contacto -->
+        <p
+          *ngIf="rec.nombrecontactoauspicia"
+          class="text-gray-600 text-sm mb-1"
+        >
+          Contacto: {{ rec.nombrecontactoauspicia }}
+        </p>
+
+        <!-- Teléfono contacto -->
+        <p
+          *ngIf="rec.telefonocontactoauspicia"
+          class="text-gray-700 text-sm mb-2"
+        >
+          Teléfono contacto: {{ rec.telefonocontactoauspicia }}
+        </p>
+
+        <!-- Botón de certificado -->
+        <div *ngIf="rec.rutacertificado" class="mt-2">
+          <button
+            (click)="downloadCertificadoReconocimiento(rec)"
+            class="bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700 transition"
+          >
+            📄 Descargar certificado
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CURSOS -->
+  <div id="cursos" class="section mb-8" *ngIf="cursos.length > 0">
+    <h2 class="text-2xl font-semibold mb-6 text-gray-800">Cursos Realizados</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div
+        *ngFor="let curso of cursos"
+        class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition"
+      >
+        <h3 class="font-semibold text-gray-800 text-lg mb-2">
+          {{ curso.nombrecurso }}
+        </h3>
+
+        <p
+          class="text-gray-600 text-sm mb-2"
+          *ngIf="curso.entidadpatrocinadora || curso.nombrecontactoauspicia"
+        >
+          <span *ngIf="curso.entidadpatrocinadora">{{
+            curso.entidadpatrocinadora
+          }}</span>
+          <span
+            *ngIf="curso.entidadpatrocinadora && curso.nombrecontactoauspicia"
+          >
+            -
+          </span>
+          <span *ngIf="curso.nombrecontactoauspicia">{{
+            curso.nombrecontactoauspicia
+          }}</span>
+        </p>
+
+        <p class="text-gray-500 text-sm mb-2">
+          {{ curso.fechainicio | date: "MMM yyyy" }} -
+          {{ curso.fechafin ? (curso.fechafin | date: "MMM yyyy") : "Actual" }}
+        </p>
+
+        <p class="text-gray-700 text-sm mb-2" *ngIf="curso.totalhoras">
+          Horas: {{ curso.totalhoras }}
+        </p>
+
+        <p class="text-gray-700 text-sm mb-3" *ngIf="curso.descripcioncurso">
+          {{ curso.descripcioncurso }}
+        </p>
+
+        <p
+          class="text-gray-500 text-sm mb-2"
+          *ngIf="curso.emailempresapatrocinadora"
+        >
+          Email: {{ curso.emailempresapatrocinadora }}
+        </p>
+
+        <div *ngIf="curso.rutacertificado">
+          <button
+            (click)="downloadCertificadoCurso(curso)"
+            class="bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700 transition"
+          >
+            📄 Descargar certificado
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRODUCTOS ACADÉMICOS -->
+  <div
+    id="productos-academicos"
+    class="section mb-8"
+    *ngIf="productos.length > 0"
+  >
+    <h2 class="text-2xl font-semibold mb-6 text-gray-800">
+      Productos Académicos
+    </h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div
+        *ngFor="let prod of productos"
+        class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition"
+      >
+        <h3 class="font-semibold text-gray-800 text-lg mb-2">
+          {{ prod.nombrerecurso }}
+        </h3>
+        <p
+          class="text-gray-600 text-sm font-bold mb-1"
+          *ngIf="prod.clasificador"
+        >
+          {{ prod.clasificador }}
+        </p>
+        <p class="text-gray-500 text-sm mb-2" *ngIf="prod.createdAt">
+          Creado: {{ prod.createdAt | date: "longDate" }}
+        </p>
+        <p class="text-gray-700 text-sm" *ngIf="prod.descripcion">
+          {{ prod.descripcion }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRODUCTOS LABORALES -->
+  <div
+    id="productos-laborales"
+    class="section mb-8"
+    *ngIf="productosLaborales.length > 0"
+  >
+    <h2 class="text-2xl font-semibold mb-6 text-gray-800">
+      Productos Laborales
+    </h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div
+        *ngFor="let prod of productosLaborales"
+        class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition"
+      >
+        <h3 class="font-semibold text-gray-800 text-lg mb-2">
+          {{ prod.nombreproducto }}
+        </h3>
+        <p class="text-gray-500 text-sm mb-2">
+          {{ prod.fechaproducto | date: "longDate" }}
+        </p>
+        <p class="text-gray-700 text-sm" *ngIf="prod.descripcion">
+          {{ prod.descripcion }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- VENTAS GARAGE -->
+  <div id="ventas-garage" class="section mb-8" *ngIf="ventasGarage.length > 0">
+    <h2 class="text-2xl font-semibold mb-6 text-gray-800">Ventas de Garage</h2>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div
+        *ngFor="let venta of ventasGarage"
+        class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition"
+      >
+        <!-- Nombre del producto -->
+        <h3 class="font-semibold text-gray-800 text-lg mb-2">
+          {{ venta.nombreproducto }}
+        </h3>
+
+        <!-- Fecha de creación -->
+        <p class="text-gray-500 text-sm mb-2">
+          {{ venta.createdAt | date: "longDate" }}
+        </p>
+
+        <!-- Estado -->
+        <p class="text-gray-600 text-sm mb-2">
+          Estado: {{ venta.estadoproducto }}
+        </p>
+
+        <!-- Descripción -->
+        <p class="text-gray-700 text-sm mb-2" *ngIf="venta.descripcion">
+          {{ venta.descripcion }}
+        </p>
+
+        <!-- Valor -->
+        <p
+          class="text-gray-700 text-sm mb-2"
+          *ngIf="venta.valordelbien !== undefined"
+        >
+          Valor: {{ venta.valordelbien | currency }}
+        </p>
+
+        <!-- Foto -->
+        <div *ngIf="venta.foto" class="mt-3">
+          <img
+            [src]="getFotoUrl(venta.foto)"
+            alt="Foto del producto"
+            class="w-full h-40 object-cover rounded-lg"
+            loading="lazy"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

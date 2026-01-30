@@ -1,0 +1,17 @@
+/* Menú oculto por defecto en móviles, visible en md+ */
+ul {
+    display: none;
+}
+
+@media (min-width: 768px) {
+    ul {
+        display: flex !important;
+    }
+}
+
+/* Mostrar menú en móviles cuando se abre */
+ul:not(.hidden) {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}

@@ -1,0 +1,267 @@
+<div class="container mx-auto px-3 sm:px-6 lg:px-8 py-4">
+  <div *ngIf="!loading; else cargando">
+    <!-- FORMULARIO -->
+    <form
+      [formGroup]="cursoForm"
+      (ngSubmit)="submitForm()"
+      class="bg-white shadow-lg rounded-2xl p-4 sm:p-6 space-y-6"
+    >
+      <h2 class="text-xl sm:text-2xl font-bold border-b pb-2">
+        Cursos realizados
+      </h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div>
+          <label class="block font-medium mb-1">Nombre del curso</label>
+          <input
+            type="text"
+            formControlName="nombrecurso"
+            class="w-full rounded-lg border px-3 py-2.5 focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div>
+          <label class="block font-medium mb-1">Fecha de inicio</label>
+          <input
+            type="date"
+            formControlName="fechainicio"
+            class="w-full rounded-lg border px-3 py-2.5"
+          />
+        </div>
+        <div>
+          <label class="block font-medium mb-1">Fecha de fin</label>
+          <input
+            type="date"
+            formControlName="fechafin"
+            class="w-full rounded-lg border px-3 py-2.5"
+          />
+        </div>
+        <div>
+          <label class="block font-medium mb-1">Total de horas</label>
+          <input
+            type="number"
+            formControlName="totalhoras"
+            class="w-full rounded-lg border px-3 py-2.5"
+          />
+        </div>
+        <div class="sm:col-span-2 lg:col-span-3">
+          <label class="block font-medium mb-1">Descripción del curso</label>
+          <textarea
+            rows="3"
+            formControlName="descripcioncurso"
+            class="w-full rounded-lg border px-3 py-2.5"
+          ></textarea>
+        </div>
+        <div>
+          <label class="block font-medium mb-1">Entidad patrocinadora</label>
+          <input
+            type="text"
+            formControlName="entidadpatrocinadora"
+            class="w-full rounded-lg border px-3 py-2.5"
+          />
+        </div>
+        <div>
+          <label class="block font-medium mb-1">Nombre contacto</label>
+          <input
+            type="text"
+            formControlName="nombrecontactoauspicia"
+            class="w-full rounded-lg border px-3 py-2.5"
+          />
+        </div>
+        <div>
+          <label class="block font-medium mb-1">Teléfono contacto</label>
+          <input
+            type="text"
+            formControlName="telefonocontactoauspicia"
+            class="w-full rounded-lg border px-3 py-2.5"
+          />
+        </div>
+        <div>
+          <label class="block font-medium mb-1">Email contacto</label>
+          <input
+            type="email"
+            formControlName="emailempresapatrocinadora"
+            class="w-full rounded-lg border px-3 py-2.5"
+          />
+        </div>
+        <div>
+          <label class="block font-medium mb-1">Certificado (PDF)</label>
+          <input
+            type="file"
+            accept=".pdf"
+            (change)="onFileSelected($event)"
+            class="w-full rounded-lg border px-3 py-2.5"
+          />
+        </div>
+        <div class="flex items-center gap-2 pt-6">
+          <input
+            type="checkbox"
+            formControlName="activarparaqueseveaenfront"
+            id="activarFront"
+            class="accent-blue-600"
+          />
+          <label for="activarFront" class="font-medium">Mostrar en front</label>
+        </div>
+      </div>
+
+      <!-- BOTONES FORMULARIO -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4">
+        <button
+          type="submit"
+          [disabled]="loading"
+          class="w-full bg-blue-600 text-white py-2.5 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+        >
+          {{ editingId ? "Actualizar" : "Guardar" }}
+        </button>
+        <button
+          type="button"
+          (click)="resetForm()"
+          class="w-full bg-gray-300 py-2.5 rounded-lg hover:bg-gray-400"
+        >
+          Limpiar
+        </button>
+      </div>
+    </form>
+
+    <!-- CURSOS VISIBLES -->
+    <h3 class="text-xl font-semibold mt-8 mb-4">Cursos visibles</h3>
+    <div *ngIf="cursos.length === 0" class="text-gray-500">
+      No hay cursos registrados.
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div
+        *ngFor="let curso of cursos"
+        class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition"
+      >
+        <h3 class="font-semibold text-gray-800 text-lg mb-2">
+          {{ curso.nombrecurso }}
+        </h3>
+        <p
+          class="text-gray-600 text-sm mb-2"
+          *ngIf="curso.entidadpatrocinadora || curso.nombrecontactoauspicia"
+        >
+          <span *ngIf="curso.entidadpatrocinadora">{{
+            curso.entidadpatrocinadora
+          }}</span>
+          <span
+            *ngIf="curso.entidadpatrocinadora && curso.nombrecontactoauspicia"
+          >
+            -
+          </span>
+          <span *ngIf="curso.nombrecontactoauspicia">{{
+            curso.nombrecontactoauspicia
+          }}</span>
+        </p>
+        <p class="text-gray-500 text-sm mb-2">
+          {{ curso.fechainicio | date: "MMM yyyy" }} -
+          {{ curso.fechafin ? (curso.fechafin | date: "MMM yyyy") : "Actual" }}
+        </p>
+        <p *ngIf="curso.totalhoras" class="text-gray-700 text-sm mb-1">
+          Horas: {{ curso.totalhoras }}
+        </p>
+        <p *ngIf="curso.descripcioncurso" class="text-gray-700 text-sm mb-2">
+          {{ curso.descripcioncurso }}
+        </p>
+        <p
+          *ngIf="curso.emailempresapatrocinadora"
+          class="text-gray-500 text-sm mb-2"
+        >
+          Email: {{ curso.emailempresapatrocinadora }}
+        </p>
+
+        <!-- BOTONES EDITAR / OCULTAR / CERTIFICADO -->
+        <div class="flex gap-2 mt-3">
+          <button
+            (click)="editCurso(curso)"
+            class="bg-yellow-500 text-white px-3 py-1 rounded"
+          >
+            Editar
+          </button>
+          <button
+            (click)="deleteCurso(curso._id!)"
+            class="bg-red-600 text-white px-3 py-1 rounded"
+          >
+            Ocultar
+          </button>
+          <button
+            *ngIf="curso.rutacertificado"
+            (click)="downloadCertificado(curso)"
+            class="bg-blue-600 text-white px-3 py-1 rounded"
+          >
+            📄 Certificado
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CURSOS OCULTOS -->
+    <div *ngIf="hiddenCursos.length > 0" class="mt-10">
+      <h3 class="text-xl font-semibold mb-4">Cursos ocultos</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div
+          *ngFor="let curso of hiddenCursos"
+          class="bg-gray-100 rounded-xl p-4 shadow-sm hover:shadow-md transition"
+        >
+          <p class="font-medium mb-1">{{ curso.nombrecurso }}</p>
+          <p class="text-sm text-gray-500 mb-1">
+            {{ curso.fechainicio | date: "MMM yyyy" }} –
+            {{
+              curso.fechafin ? (curso.fechafin | date: "MMM yyyy") : "Actual"
+            }}
+          </p>
+          <p *ngIf="curso.totalhoras" class="text-sm text-gray-700 mb-1">
+            ⏱ {{ curso.totalhoras }} horas
+          </p>
+          <p *ngIf="curso.descripcioncurso" class="text-sm text-gray-700 mb-1">
+            {{ curso.descripcioncurso }}
+          </p>
+          <p
+            *ngIf="curso.entidadpatrocinadora"
+            class="text-sm text-gray-600 mb-1"
+          >
+            {{ curso.entidadpatrocinadora }}
+          </p>
+          <p
+            *ngIf="curso.nombrecontactoauspicia"
+            class="text-sm text-gray-600 mb-1"
+          >
+            Contacto: {{ curso.nombrecontactoauspicia }}
+          </p>
+          <p
+            *ngIf="curso.telefonocontactoauspicia"
+            class="text-sm text-gray-700 mb-1"
+          >
+            Teléfono contacto: {{ curso.telefonocontactoauspicia }}
+          </p>
+          <p
+            *ngIf="curso.emailempresapatrocinadora"
+            class="text-sm text-gray-700 mb-2"
+          >
+            Email: {{ curso.emailempresapatrocinadora }}
+          </p>
+          <div class="flex gap-2 mt-3">
+            <button
+              (click)="recoverCurso(curso._id!)"
+              class="bg-blue-600 text-white px-3 py-1 rounded"
+            >
+              Recuperar
+            </button>
+            <button
+              *ngIf="curso.rutacertificado"
+              (click)="downloadCertificado(curso)"
+              class="bg-green-600 text-white px-3 py-1 rounded"
+            >
+              📄 Certificado
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TEMPLATE CARGANDO -->
+  <ng-template #cargando>
+    <div class="text-center py-10 text-gray-500 text-lg">
+      Cargando cursos...
+    </div>
+  </ng-template>
+</div>

@@ -1,0 +1,215 @@
+<div
+  class="container mx-auto px-3 sm:px-6 lg:px-8 py-4"
+  *ngIf="!loading; else cargando"
+>
+  <h2 class="text-xl sm:text-2xl font-bold border-b pb-2 mb-4">
+    Venta de garage
+  </h2>
+
+  <!-- Mensaje -->
+  <div
+    *ngIf="mensaje"
+    class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg mb-4"
+  >
+    {{ mensaje }}
+  </div>
+
+  <!-- =========================
+       BOTONES VISIBLES / OCULTOS
+  ========================= -->
+  <div class="flex flex-wrap gap-2 mb-6">
+    <button
+      *ngIf="!isViewingHidden"
+      (click)="loadHiddenProductos()"
+      class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+    >
+      Ver ocultos
+    </button>
+
+    <button
+      *ngIf="isViewingHidden"
+      (click)="loadProductos()"
+      class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
+    >
+      Volver a visibles
+    </button>
+  </div>
+
+  <!-- =========================
+       FORMULARIO
+  ========================= -->
+  <form
+    [formGroup]="productoForm"
+    (ngSubmit)="submitForm()"
+    class="bg-white shadow-lg rounded-2xl p-4 sm:p-6 space-y-6"
+  >
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div>
+        <label class="block font-medium mb-1">
+          Nombre del producto <span class="text-red-500">*</span>
+        </label>
+        <input
+          type="text"
+          formControlName="nombreproducto"
+          class="w-full rounded-lg border px-3 py-2.5 focus:ring-2 focus:ring-blue-500"
+        />
+        <p
+          *ngIf="
+            productoForm.controls['nombreproducto'].invalid &&
+            productoForm.controls['nombreproducto'].touched
+          "
+          class="text-red-600 text-sm mt-1"
+        >
+          Nombre obligatorio, máximo 100 caracteres
+        </p>
+      </div>
+
+      <div>
+        <label class="block font-medium mb-1">Estado del producto</label>
+        <select
+          formControlName="estadoproducto"
+          class="w-full rounded-lg border px-3 py-2.5"
+        >
+          <option *ngFor="let estado of estados" [value]="estado">
+            {{ estado }}
+          </option>
+        </select>
+      </div>
+
+      <div class="sm:col-span-2 lg:col-span-3">
+        <label class="block font-medium mb-1">Descripción</label>
+        <textarea
+          rows="3"
+          formControlName="descripcion"
+          class="w-full rounded-lg border px-3 py-2.5"
+        ></textarea>
+      </div>
+
+      <div>
+        <label class="block font-medium mb-1">Valor del bien</label>
+        <input
+          type="number"
+          min="0"
+          formControlName="valordelbien"
+          class="w-full rounded-lg border px-3 py-2.5"
+        />
+      </div>
+
+      <div class="flex items-center gap-2 pt-6">
+        <input
+          type="checkbox"
+          formControlName="activarparaqueseveaenfront"
+          id="activoFront"
+          class="accent-blue-600"
+        />
+        <label for="activoFront" class="font-medium"> Activo en front </label>
+      </div>
+
+      <!-- FOTO -->
+      <div class="sm:col-span-2 lg:col-span-3">
+        <label class="block font-medium mb-1">Foto del producto</label>
+        <input type="file" (change)="onFileSelected($event)" />
+      </div>
+    </div>
+
+    <!-- BOTONES -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4">
+      <button
+        type="submit"
+        class="w-full bg-blue-600 text-white py-2.5 rounded-lg hover:bg-blue-700"
+      >
+        {{ editingId ? "Actualizar" : "Crear" }}
+      </button>
+
+      <button
+        type="button"
+        (click)="resetForm()"
+        class="w-full bg-gray-300 py-2.5 rounded-lg hover:bg-gray-400"
+      >
+        Cancelar
+      </button>
+    </div>
+  </form>
+
+  <!-- =========================
+       LISTA DE PRODUCTOS
+  ========================= -->
+  <h3 class="text-xl font-semibold mt-8 mb-4">
+    Productos {{ isViewingHidden ? "ocultos" : "visibles" }}
+  </h3>
+
+  <div *ngIf="productos.length === 0" class="text-gray-500">
+    No hay productos disponibles.
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div
+      *ngFor="let producto of productos"
+      class="bg-white rounded-xl shadow-md p-6 flex flex-col justify-between"
+    >
+      <div>
+        <p class="font-semibold text-gray-800 mb-1">
+          {{ producto.nombreproducto }}
+        </p>
+
+        <p class="text-sm text-gray-600 mb-1">
+          Estado: {{ producto.estadoproducto }}
+        </p>
+
+        <p *ngIf="producto.descripcion" class="text-sm text-gray-700 mb-2">
+          {{ producto.descripcion }}
+        </p>
+
+        <p class="font-semibold text-gray-800 mb-2">
+          {{ producto.valordelbien | currency }}
+        </p>
+
+        <img
+          *ngIf="producto.foto"
+          [src]="getFotoUrl(producto.foto)"
+          class="w-full h-40 object-cover rounded-lg"
+        />
+      </div>
+
+      <div class="flex flex-wrap gap-2 pt-4">
+        <button
+          (click)="editProducto(producto)"
+          class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
+        >
+          Editar
+        </button>
+
+        <button
+          *ngIf="producto.activarparaqueseveaenfront"
+          (click)="deleteProducto(producto)"
+          class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+        >
+          Ocultar
+        </button>
+
+        <button
+          *ngIf="!producto.activarparaqueseveaenfront"
+          (click)="recoverProducto(producto)"
+          class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
+        >
+          Recuperar
+        </button>
+
+        <button
+          *ngIf="editingId === producto._id && selectedFile"
+          type="button"
+          (click)="uploadFoto(producto)"
+          class="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
+        >
+          Subir foto
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #cargando>
+  <div class="text-center py-10 text-gray-500 text-lg">
+    Cargando productos...
+  </div>
+</ng-template>

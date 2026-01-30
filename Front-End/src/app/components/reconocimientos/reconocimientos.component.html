@@ -1,0 +1,254 @@
+<div
+  class="container mx-auto px-3 sm:px-6 lg:px-8 py-4"
+  *ngIf="!loading; else cargando"
+>
+  <!-- =========================
+       FORMULARIO
+  ========================= -->
+  <form
+    [formGroup]="reconocimientoForm"
+    (ngSubmit)="submitForm()"
+    class="bg-white shadow-lg rounded-2xl p-4 sm:p-6 space-y-6"
+  >
+    <h2 class="text-xl sm:text-2xl font-bold border-b pb-2">Reconocimientos</h2>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div>
+        <label class="block font-medium mb-1">Tipo de reconocimiento</label>
+        <select
+          formControlName="tiporeconocimiento"
+          class="w-full rounded-lg border px-3 py-2.5 focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="">Selecciona un tipo</option>
+          <option value="Académico">Académico</option>
+          <option value="Público">Público</option>
+          <option value="Privado">Privado</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block font-medium mb-1">Fecha de reconocimiento</label>
+        <input
+          type="date"
+          formControlName="fechareconocimiento"
+          class="w-full rounded-lg border px-3 py-2.5"
+        />
+      </div>
+
+      <div class="sm:col-span-2 lg:col-span-3">
+        <label class="block font-medium mb-1">Descripción</label>
+        <textarea
+          formControlName="descripcionreconocimiento"
+          rows="3"
+          class="w-full rounded-lg border px-3 py-2.5"
+        ></textarea>
+      </div>
+
+      <div>
+        <label class="block font-medium mb-1">Entidad patrocinadora</label>
+        <input
+          type="text"
+          formControlName="entidadpatrocinadora"
+          class="w-full rounded-lg border px-3 py-2.5"
+        />
+      </div>
+
+      <div>
+        <label class="block font-medium mb-1">Nombre contacto</label>
+        <input
+          type="text"
+          formControlName="nombrecontactoauspicia"
+          class="w-full rounded-lg border px-3 py-2.5"
+        />
+      </div>
+
+      <div>
+        <label class="block font-medium mb-1">Teléfono contacto</label>
+        <input
+          type="text"
+          formControlName="telefonocontactoauspicia"
+          class="w-full rounded-lg border px-3 py-2.5"
+        />
+      </div>
+
+      <div>
+        <label class="block font-medium mb-1">Certificado (PDF)</label>
+        <input
+          type="file"
+          (change)="onFileSelected($event)"
+          accept=".pdf"
+          class="w-full rounded-lg border px-3 py-2.5"
+        />
+      </div>
+
+      <div class="flex items-center gap-2 pt-6">
+        <input
+          type="checkbox"
+          formControlName="activarparaqueseveaenfront"
+          id="activarFront"
+          class="accent-blue-600"
+        />
+        <label for="activarFront" class="font-medium"> Mostrar en front </label>
+      </div>
+    </div>
+
+    <!-- BOTONES -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4">
+      <button
+        type="submit"
+        [disabled]="loading"
+        class="w-full bg-blue-600 text-white py-2.5 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+      >
+        {{ editingId ? "Actualizar" : "Guardar" }}
+      </button>
+
+      <button
+        type="button"
+        (click)="resetForm()"
+        class="w-full bg-gray-300 py-2.5 rounded-lg hover:bg-gray-400"
+      >
+        Limpiar
+      </button>
+    </div>
+  </form>
+
+  <!-- =========================
+       RECONOCIMIENTOS VISIBLES
+  ========================= -->
+  <h3 class="text-xl font-semibold mt-8 mb-4">Reconocimientos visibles</h3>
+
+  <div *ngIf="reconocimientos.length === 0" class="text-gray-500">
+    No hay reconocimientos registrados.
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div
+      *ngFor="let rec of reconocimientos"
+      class="bg-white rounded-xl shadow-md p-6 flex flex-col justify-between"
+    >
+      <!-- Información del reconocimiento -->
+      <div>
+        <p class="font-semibold text-gray-800 mb-1">
+          {{ rec.tiporeconocimiento || "Tipo no especificado" }}
+        </p>
+
+        <p class="text-sm text-gray-500 mb-2">
+          {{ rec.fechareconocimiento | date: "MMM yyyy" }}
+        </p>
+
+        <p
+          *ngIf="rec.descripcionreconocimiento"
+          class="text-sm text-gray-700 mb-2"
+        >
+          {{ rec.descripcionreconocimiento }}
+        </p>
+
+        <p *ngIf="rec.entidadpatrocinadora" class="text-sm text-gray-600">
+          {{ rec.entidadpatrocinadora }}
+        </p>
+
+        <p *ngIf="rec.nombrecontactoauspicia" class="text-sm text-gray-600">
+          Contacto: {{ rec.nombrecontactoauspicia }}
+        </p>
+
+        <p *ngIf="rec.telefonocontactoauspicia" class="text-sm text-gray-600">
+          Teléfono contacto: {{ rec.telefonocontactoauspicia }}
+        </p>
+      </div>
+
+      <!-- Botones -->
+      <div class="flex flex-wrap gap-2 pt-4">
+        <button
+          (click)="editReconocimiento(rec)"
+          class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
+        >
+          Editar
+        </button>
+
+        <button
+          (click)="deleteReconocimiento(rec._id!)"
+          class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+        >
+          Eliminar
+        </button>
+
+        <button
+          *ngIf="rec.rutacertificado"
+          (click)="downloadCertificado(rec)"
+          class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
+        >
+          📄 Certificado
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================
+       RECONOCIMIENTOS OCULTOS
+  ========================= -->
+  <div *ngIf="hiddenReconocimientos.length > 0" class="mt-10">
+    <h3 class="text-xl font-semibold mb-4">Reconocimientos ocultos</h3>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div
+        *ngFor="let rec of hiddenReconocimientos"
+        class="bg-gray-100 rounded-xl p-4 shadow-sm"
+      >
+        <p class="font-medium">
+          {{ rec.tiporeconocimiento || "Tipo no especificado" }}
+        </p>
+        <p class="text-sm text-gray-500">
+          {{ rec.fechareconocimiento | date: "MMM yyyy" }}
+        </p>
+
+        <p
+          *ngIf="rec.descripcionreconocimiento"
+          class="text-sm text-gray-700 mt-1"
+        >
+          {{ rec.descripcionreconocimiento }}
+        </p>
+
+        <p *ngIf="rec.entidadpatrocinadora" class="text-sm text-gray-600 mt-1">
+          {{ rec.entidadpatrocinadora }}
+        </p>
+
+        <p
+          *ngIf="rec.nombrecontactoauspicia"
+          class="text-sm text-gray-600 mt-1"
+        >
+          Contacto: {{ rec.nombrecontactoauspicia }}
+        </p>
+
+        <p
+          *ngIf="rec.telefonocontactoauspicia"
+          class="text-sm text-gray-600 mt-1"
+        >
+          Teléfono contacto: {{ rec.telefonocontactoauspicia }}
+        </p>
+
+        <div class="flex gap-2 mt-3">
+          <button
+            (click)="recoverReconocimiento(rec._id!)"
+            class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+          >
+            Recuperar
+          </button>
+
+          <button
+            *ngIf="rec.rutacertificado"
+            (click)="downloadCertificado(rec)"
+            class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
+          >
+            Certificado
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #cargando>
+  <div class="text-center py-10 text-gray-500 text-lg">
+    Cargando reconocimientos...
+  </div>
+</ng-template>

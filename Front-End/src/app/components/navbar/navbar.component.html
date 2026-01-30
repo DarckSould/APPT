@@ -1,0 +1,71 @@
+<nav class="sticky top-0 z-50 bg-white border-b border-gray-200">
+  <div
+    class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between"
+  >
+    <!-- Logo -->
+    <a
+      routerLink="/"
+      class="text-lg font-semibold text-blue-600 hover:text-blue-700"
+    >
+      Home
+    </a>
+
+    <!-- Botón hamburguesa -->
+    <button
+      class="md:hidden text-gray-700 text-2xl focus:outline-none"
+      (click)="toggleMenu()"
+      aria-label="Toggle menu"
+    >
+      ☰
+    </button>
+
+    <!-- Menú desktop -->
+    <ul class="hidden md:flex items-center gap-6 text-sm font-medium">
+      <li *ngIf="!isLoggedIn">
+        <a
+          routerLink="/login"
+          class="text-gray-600 hover:text-blue-600 transition"
+        >
+          Login
+        </a>
+      </li>
+
+      <li *ngIf="isLoggedIn">
+        <a
+          routerLink="/dashboard"
+          class="text-gray-600 hover:text-blue-600 transition"
+        >
+          Dashboard
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Menú mobile -->
+  <div
+    *ngIf="menuOpen"
+    class="md:hidden bg-white border-t border-gray-200 shadow-sm"
+  >
+    <ul class="flex flex-col text-sm">
+      <li *ngIf="!isLoggedIn">
+        <a
+          routerLink="/login"
+          (click)="menuOpen = false"
+          class="block px-6 py-3 text-gray-700 hover:bg-gray-100"
+        >
+          Login
+        </a>
+      </li>
+
+      <li *ngIf="isLoggedIn">
+        <a
+          routerLink="/dashboard"
+          (click)="menuOpen = false"
+          class="block px-6 py-3 text-gray-700 hover:bg-gray-100"
+        >
+          Dashboard
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>

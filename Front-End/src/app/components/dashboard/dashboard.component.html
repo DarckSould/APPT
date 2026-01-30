@@ -1,0 +1,82 @@
+<div class="container mx-auto p-8 bg-gray-50 min-h-screen">
+  <!-- Navbar tipo dashboard -->
+  <nav
+    class="flex flex-col lg:flex-row justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-gray-100 gap-6"
+  >
+    <!-- Pestañas scrollables -->
+    <div class="flex-1 overflow-x-auto w-full scrollbar-hide">
+      <ul
+        class="flex items-center space-x-2 p-1 bg-gray-100/50 rounded-xl w-max"
+      >
+        <li *ngFor="let tab of tabs">
+          <button
+            (click)="showSection(tab.id)"
+            [ngClass]="
+              activeSection === tab.id
+                ? 'bg-white text-blue-600 shadow-sm'
+                : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200/50'
+            "
+            class="px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 whitespace-nowrap"
+          >
+            {{ tab.label }}
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Perfil a la derecha -->
+    <div class="flex items-center pl-6 border-l border-gray-100">
+      <app-profile></app-profile>
+    </div>
+  </nav>
+
+  <!-- Secciones renderizadas dinámicamente -->
+  <section
+    *ngIf="activeSection === 'datos-personales'"
+    class="bg-white shadow rounded p-6 mt-6"
+  >
+    <app-datos-personales></app-datos-personales>
+  </section>
+
+  <section
+    *ngIf="activeSection === 'productos-academicos'"
+    class="bg-white shadow rounded p-6 mt-6"
+  >
+    <app-productos-academicos></app-productos-academicos>
+  </section>
+
+  <section
+    *ngIf="activeSection === 'experiencia-laboral'"
+    class="bg-white shadow rounded p-6 mt-6"
+  >
+    <app-experiencia-laboral></app-experiencia-laboral>
+  </section>
+
+  <section
+    *ngIf="activeSection === 'productos-laborales'"
+    class="bg-white shadow rounded p-6 mt-6"
+  >
+    <app-productos-laborales></app-productos-laborales>
+  </section>
+
+  <section
+    *ngIf="activeSection === 'venta-garage'"
+    class="bg-white shadow rounded p-6 mt-6"
+  >
+    <app-venta-garage></app-venta-garage>
+  </section>
+
+  <section
+    *ngIf="activeSection === 'cursos-realizados'"
+    class="bg-white shadow rounded p-6 mt-6"
+  >
+    <app-cursos-realizados></app-cursos-realizados>
+  </section>
+
+  <section
+    *ngIf="activeSection === 'reconocimientos'"
+    class="bg-white shadow rounded p-6 mt-6"
+  >
+    <app-reconocimientos></app-reconocimientos>
+  </section>
+</div>
