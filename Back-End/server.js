@@ -28,7 +28,7 @@ const app = express();
 ====================== */
 app.use(
   cors({
-    origin: 'http://localhost:4200',
+    origin: process.env.FRONTEND_URL || 'http://localhost:4200',
     credentials: true,
   }),
 );
@@ -37,7 +37,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(morgan('dev'));
 
-// Servir archivos estáticos (certificados)
+// Servir archivos estáticos (uploads)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 /* ===== Rutas ===== */
