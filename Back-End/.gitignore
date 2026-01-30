@@ -5,9 +5,6 @@
 .env.*
 
 #Archivos generados
-/uploads
-/signed
-/p12_chain_out
 
 # Compiled output
 /dist
