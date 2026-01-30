@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
@@ -10,21 +11,14 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./profile.component.css'],
 })
 export class ProfileComponent implements OnInit {
-  user: any;
+  user$: Observable<any>;
 
-  constructor(private auth: AuthService) {}
+  constructor(private auth: AuthService) {
+    this.user$ = this.auth.currentUser$; // Observable que siempre refleja el user actual
+  }
 
   ngOnInit(): void {
-    this.auth.getProfile().subscribe({
-      next: (data) => (this.user = data),
-      error: (err) => {
-        console.error(err);
-        if (err.status === 401) {
-          this.auth.clearSession();
-          window.location.href = '/login';
-        }
-      },
-    });
+    this.auth.initAuth(); // Inicializa user desde token
   }
 
   logout(): void {
@@ -37,7 +31,7 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  getInitials(name: string): string {
+  getInitials(name?: string): string {
     if (!name) return '';
     const parts = name.split(' ');
     return parts.length > 1
